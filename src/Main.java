@@ -38,6 +38,7 @@ public class Main {
         printDepartmentEmployee(employees, 3);
         System.out.println("task3");
         getAllEmployeeLessSalary(employees, 150_000.0f);
+        System.out.println();
         getAllEmployeeMoreSalary(employees, 150_000.0f);
     }
 
