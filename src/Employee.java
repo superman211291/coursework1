@@ -7,13 +7,17 @@ public class Employee {
     private int department;
     private float salary;
     public Employee(String name, String surname, String patronymic, int department, float salary) {
-        this.name = name;
-        this.surname = surname;
-        this.patronymic = patronymic;
-        this.department = department;
-        this.salary = salary;
-        this.id = count;
-        count++;
+        if (department<1 || department >5){
+            throw new IllegalArgumentException("Номер отдела может быть в диапазоне от 1 - 5 а он :" + department);
+        } else {
+            this.name = name;
+            this.surname = surname;
+            this.patronymic = patronymic;
+            this.department = department;
+            this.salary = salary;
+            this.id = count;
+            count++;
+        }
     }
 
     public int getId() {

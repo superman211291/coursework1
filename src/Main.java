@@ -25,6 +25,26 @@ public class Main {
         System.out.println(getAverageSalary(employees));
         System.out.println("task6");
         getFullNameAll(employees);
+        System.out.println("MiddleDifficult");
+        System.out.println("task1");
+        indexingSalary(employees, 10);
+        getAll(employees);
+        System.out.println("task2");
+        System.out.println("departmentMinSalary - " + getDepartmentEmployeeMinSalary(employees));
+        System.out.println("departmentMaxSalary - " + getDepartmentEmployeeMaxSalary(employees));
+        System.out.println("departmentSumSalary 3 - " + getDepartmentOurSalary(employees, 3));
+        System.out.println("departmentAverageSalary 3 - " + getDepartmentAverageSalary(employees, 3));
+        indexingDepartmentSalary(employees, 3, 10);
+        printDepartmentEmployee(employees, 3);
+        System.out.println("task3");
+        getAllEmployeeLessSalary(employees, 150_000.0f);
+        getAllEmployeeMoreSalary(employees, 150_000.0f);
+    }
+
+    private static void indexingSalary(Employee[] employees, int percent) {
+        for (Employee employee : employees) {
+            employee.setSalary(employee.getSalary() + (employee.getSalary() / 100 * percent));
+        }
     }
 
     private static void getAll(Employee[] employees) {
@@ -75,9 +95,83 @@ public class Main {
         }
     }
 
+    private static int getDepartmentEmployeeMinSalary(Employee[] employees) {
+        return getEmployeeMinSalary(employees).getDepartment();
+    }
+
+    private static int getDepartmentEmployeeMaxSalary(Employee[] employees) {
+        return getEmployeeMaxSalary(employees).getDepartment();
+    }
+
+    private static float getDepartmentOurSalary(Employee[] employees, int department) {
+        float sumDepartment = 0.0f;
+        for (Employee employee : employees) {
+            if (department == employee.getDepartment()) {
+                sumDepartment += employee.getSalary();
+            }
+        }
+        return sumDepartment;
+    }
+
+    private static float getDepartmentAverageSalary(Employee[] employees, int department) {
+        return getDepartmentOurSalary(employees, department) / getCountDepartmentEmployee(employees, department);
+    }
+
+    private static void indexingDepartmentSalary(Employee[] employees, int department, int percent) {
+        for (Employee employee : employees) {
+            if (employee.getDepartment() == department) {
+                employee.setSalary(employee.getSalary() + (employee.getSalary() / 100 * percent));
+            }
+        }
+    }
+
+    private static void printDepartmentEmployee(Employee[] employees, int department) {
+        for (Employee employee : employees) {
+            if (department == employee.getDepartment()) {
+                printEmployeeWithoutDepartment(employee);
+            }
+        }
+    }
+
+    private static void printEmployeeWithoutDepartment(Employee employee) {
+        System.out.println(employee.getId() + " " +
+                employee.getName() + " " +
+                employee.getSurname() + " " +
+                employee.getPatronymic() + " " +
+                employee.getSalary()
+        );
+    }
+
+    private static void getAllEmployeeLessSalary(Employee[] employees, float salary) {
+        for (Employee employee : employees) {
+            if (employee.getSalary() < salary) {
+                printEmployeeWithoutDepartment(employee);
+            }
+        }
+    }
+
+    private static void getAllEmployeeMoreSalary(Employee[] employees, float salary) {
+        for (Employee employee : employees) {
+            if (employee.getSalary() > salary) {
+                printEmployeeWithoutDepartment(employee);
+            }
+        }
+    }
+
+
     private static float getGeneratedSalary() {
         float leftLimit = 1;
         float rightLimit = 500_000f;
         return leftLimit + (new Random().nextFloat() * (rightLimit - leftLimit));
+    }
+
+    private static int getCountDepartmentEmployee(Employee[] employees, int department) {
+        int count = 0;
+        for (Employee employee : employees) {
+            if (employee.getDepartment() == department) {
+                count++;
+            }
+        }
+        return count;
     }
 }
