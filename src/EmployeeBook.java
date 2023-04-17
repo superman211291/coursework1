@@ -5,11 +5,7 @@ public class EmployeeBook {
     private int count;
 
     public void addEmployee(Employee employee) {
-        for (int i = 0; i < count; i++) {
-            if (employees[i].equals(employee)) {
-                throw new IllegalArgumentException("Такой Сотрудник уже есть в базе!");
-            }
-        }
+        checkEmployee(employee);
         employees[count] = employee;
         count++;
     }
@@ -29,24 +25,22 @@ public class EmployeeBook {
     }
 
     public void indexingSalary(int percent) {
-        for (Employee employee : employees) {
-            employee.setSalary(employee.getSalary() + (employee.getSalary() / 100 * percent));
+        for (int i = 0; i < count; i++) {
+            employees[i].setSalary(employees[i].getSalary() + (employees[i].getSalary() / 100 * percent));
         }
     }
 
     public void printAll() {
-        for (Employee employee : employees) {
-            if (employee != null) {
-                System.out.println(employee);
-            }
+        for (int i = 0; i < count; i++){
+            System.out.println(employees[i]);
         }
         System.out.println();
     }
 
     public float getOurSalary() {
         float sum = 0.0f;
-        for (Employee employee : employees) {
-            sum += employee.getSalary();
+        for (int i = 0; i < count; i++) {
+            sum += employees[i].getSalary();
         }
         return sum;
     }
@@ -54,10 +48,10 @@ public class EmployeeBook {
     public Employee getEmployeeMinSalary() {
         Employee employeeResult = employees[0];
         float minSalary = employees[0].getSalary();
-        for (Employee employee : employees) {
-            if (minSalary > employee.getSalary()) {
-                employeeResult = employee;
-                minSalary = employee.getSalary();
+        for (int i = 0; i < count; i++) {
+            if (minSalary > employees[i].getSalary()) {
+                employeeResult = employees[i];
+                minSalary = employees[i].getSalary();
             }
         }
         return employeeResult;
@@ -66,10 +60,10 @@ public class EmployeeBook {
     public Employee getEmployeeMaxSalary() {
         Employee employeeResult = employees[0];
         float maxSalary = employees[0].getSalary();
-        for (Employee employee : employees) {
-            if (maxSalary < employee.getSalary()) {
-                employeeResult = employee;
-                maxSalary = employee.getSalary();
+        for (int i = 0; i < count; i++) {
+            if (maxSalary < employees[i].getSalary()) {
+                employeeResult = employees[i];
+                maxSalary = employees[i].getSalary();
             }
         }
         return employeeResult;
@@ -80,8 +74,8 @@ public class EmployeeBook {
     }
 
     public void getFullNameAll() {
-        for (Employee employee : employees) {
-            System.out.println(employee.getSurname() + " " + employee.getName() + " " + employee.getPatronymic());
+        for (int i = 0; i < count; i++) {
+            System.out.println(employees[i].getSurname() + " " + employees[i].getName() + " " + employees[i].getPatronymic());
         }
     }
 
@@ -95,9 +89,9 @@ public class EmployeeBook {
 
     public float getDepartmentOurSalary(int department) {
         float sumDepartment = 0.0f;
-        for (Employee employee : employees) {
-            if (department == employee.getDepartment()) {
-                sumDepartment += employee.getSalary();
+        for (int i = 0; i < count; i++) {
+            if (department == employees[i].getDepartment()) {
+                sumDepartment += employees[i].getSalary();
             }
         }
         return sumDepartment;
@@ -108,17 +102,17 @@ public class EmployeeBook {
     }
 
     public void indexingDepartmentSalary(int department, int percent) {
-        for (Employee employee : employees) {
-            if (employee.getDepartment() == department) {
-                employee.setSalary(employee.getSalary() + (employee.getSalary() / 100 * percent));
+        for (int i = 0; i < count; i++) {
+            if (employees[i].getDepartment() == department) {
+                employees[i].setSalary(employees[i].getSalary() + (employees[i].getSalary() / 100 * percent));
             }
         }
     }
 
     public void printDepartmentEmployee(int department) {
-        for (Employee employee : employees) {
-            if (department == employee.getDepartment()) {
-                printEmployeeWithoutDepartment(employee);
+        for (int i = 0; i < count; i++) {
+            if (department == employees[i].getDepartment()) {
+                printEmployeeWithoutDepartment(employees[i]);
             }
         }
     }
@@ -133,17 +127,17 @@ public class EmployeeBook {
     }
 
     public void getAllEmployeeLessSalary(float salary) {
-        for (Employee employee : employees) {
-            if (employee.getSalary() < salary) {
-                printEmployeeWithoutDepartment(employee);
+        for (int i = 0; i < count; i++) {
+            if (employees[i].getSalary() < salary) {
+                printEmployeeWithoutDepartment(employees[i]);
             }
         }
     }
 
     public void getAllEmployeeMoreSalary(float salary) {
-        for (Employee employee : employees) {
-            if (employee.getSalary() > salary) {
-                printEmployeeWithoutDepartment(employee);
+        for (int i = 0; i < count; i++) {
+            if (employees[i].getSalary() > salary) {
+                printEmployeeWithoutDepartment(employees[i]);
             }
         }
     }
@@ -168,8 +162,8 @@ public class EmployeeBook {
 
     public int getCountDepartmentEmployee(int department) {
         int count = 0;
-        for (Employee employee : employees) {
-            if (employee.getDepartment() == department) {
+        for (int i = 0; i < count; i++) {
+            if (employees[i].getDepartment() == department) {
                 count++;
             }
         }
@@ -190,6 +184,14 @@ public class EmployeeBook {
                                 employees[i].getName() + " " +
                                 employees[i].getSurname() + " " +
                                 employees[i].getPatronymic());
+        }
+    }
+
+    private void checkEmployee(Employee employee) {
+        for (int i = 0; i < count; i++) {
+            if (employees[i].equals(employee)) {
+                throw new IllegalArgumentException("Такой Сотрудник уже есть в базе!");
+            }
         }
     }
 }
