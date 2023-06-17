@@ -48,8 +48,9 @@ public class Main {
         //employeeBook.printAll();
         System.out.println("task5");
         employeeBook.printAll();
-        employeeBook.changeSalary("Илья", "Строев", "Павлович",135_000.0f);
+        employeeBook.changeSalary("Илья", "Строев", "Павлович", 135_000.0f);
         employeeBook.changeDepartment("Илья", "Строев", "Павлович", 3);
+        //employeeBook.changeSalary("Иля", "Строев", "Павлович", 135_000.0f);
         employeeBook.printAll();
         System.out.println("task6");
         employeeBook.printAllDepartmentAndFullName();

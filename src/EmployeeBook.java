@@ -1,82 +1,79 @@
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 public class EmployeeBook {
-    private Employee[] employees = new Employee[10];
-    private int count;
+    //private Employee[] employees = new Employee[10];
+    private Map<Integer, Employee> employees = new HashMap<>();
+    private Integer count;
+
+    private boolean checkEmployee(int id) {
+        return employees.containsKey(id);
+    }
 
     public void addEmployee(Employee employee) {
-        checkEmployee(employee);
-        employees[count] = employee;
-        count++;
+        if (checkEmployee(employee.hashCode())) {
+            throw new IllegalArgumentException("Такой Сотрудник уже есть в базе!");
+        }
+        employees.put(employee.hashCode(), employee);
     }
 
     public void deleteEmployee(int id) {
-        for (int i = 0; i < employees.length; i++) {
-            if (employees[i].getId() == id) {
-                for (int j = i; j < employees.length - 1; j++) {
-                    employees[j] = employees[j + 1];
-                }
-                employees[employees.length - 1] = null;
-                count--;
-                return;
-            }
+        if (!checkEmployee(id)) {
+            System.out.println("id сотрудника не найден!");
+        } else {
+            employees.remove(id);
         }
-        System.out.println("id сотрудника не найден!");
+
     }
 
     public void indexingSalary(int percent) {
-        for (int i = 0; i < count; i++) {
-            employees[i].setSalary(employees[i].getSalary() + (employees[i].getSalary() / 100 * percent));
-        }
+        employees.forEach((integer, employee) -> employee.setSalary(employee.getSalary() + employee.getSalary() / 100 * percent));
     }
 
     public void printAll() {
-        for (int i = 0; i < count; i++){
-            System.out.println(employees[i]);
-        }
+        employees.forEach((integer, employee) -> System.out.println(employee.toString()));
         System.out.println();
     }
 
     public float getOurSalary() {
         float sum = 0.0f;
-        for (int i = 0; i < count; i++) {
-            sum += employees[i].getSalary();
+        for (Map.Entry<Integer, Employee> entry : employees.entrySet()) {
+            sum += entry.getValue().getSalary();
         }
         return sum;
     }
 
     public Employee getEmployeeMinSalary() {
-        Employee employeeResult = employees[0];
-        float minSalary = employees[0].getSalary();
-        for (int i = 0; i < count; i++) {
-            if (minSalary > employees[i].getSalary()) {
-                employeeResult = employees[i];
-                minSalary = employees[i].getSalary();
+        Employee employeeResult = employees.values().iterator().next();
+        float minSalary = employeeResult.getSalary();
+        for (Map.Entry<Integer, Employee> entry : employees.entrySet()) {
+            if (minSalary > entry.getValue().getSalary()) {
+                employeeResult = employees.get(entry.getKey());
+                minSalary = entry.getValue().getSalary();
             }
         }
         return employeeResult;
     }
 
     public Employee getEmployeeMaxSalary() {
-        Employee employeeResult = employees[0];
-        float maxSalary = employees[0].getSalary();
-        for (int i = 0; i < count; i++) {
-            if (maxSalary < employees[i].getSalary()) {
-                employeeResult = employees[i];
-                maxSalary = employees[i].getSalary();
+        Employee employeeResult = employees.values().iterator().next();
+        float maxSalary = employeeResult.getSalary();
+        for (Map.Entry<Integer, Employee> entry : employees.entrySet()) {
+            if (maxSalary < entry.getValue().getSalary()) {
+                employeeResult = employees.get(entry.getKey());
+                maxSalary = entry.getValue().getSalary();
             }
         }
         return employeeResult;
     }
 
     public float getAverageSalary() {
-        return getOurSalary() / employees.length;
+        return getOurSalary() / employees.size();
     }
 
     public void getFullNameAll() {
-        for (int i = 0; i < count; i++) {
-            System.out.println(employees[i].getSurname() + " " + employees[i].getName() + " " + employees[i].getPatronymic());
-        }
+        employees.forEach((integer, employee) -> System.out.println(employee.getSurname() + " " + employee.getName() + " " + employee.getPatronymic()));
     }
 
     public int getDepartmentEmployeeMinSalary() {
@@ -89,9 +86,9 @@ public class EmployeeBook {
 
     public float getDepartmentOurSalary(int department) {
         float sumDepartment = 0.0f;
-        for (int i = 0; i < count; i++) {
-            if (department == employees[i].getDepartment()) {
-                sumDepartment += employees[i].getSalary();
+        for (Map.Entry<Integer, Employee> entry : employees.entrySet()) {
+            if (department == entry.getValue().getDepartment()) {
+                sumDepartment += entry.getValue().getSalary();
             }
         }
         return sumDepartment;
@@ -102,55 +99,45 @@ public class EmployeeBook {
     }
 
     public void indexingDepartmentSalary(int department, int percent) {
-        for (int i = 0; i < count; i++) {
-            if (employees[i].getDepartment() == department) {
-                employees[i].setSalary(employees[i].getSalary() + (employees[i].getSalary() / 100 * percent));
+        for (Map.Entry<Integer, Employee> entry : employees.entrySet()) {
+            if (department == entry.getValue().getDepartment()) {
+                entry.getValue().setSalary(entry.getValue().getSalary() + (entry.getValue().getSalary() / 100 * percent));
             }
         }
     }
 
     public void printDepartmentEmployee(int department) {
-        for (int i = 0; i < count; i++) {
-            if (department == employees[i].getDepartment()) {
-                printEmployeeWithoutDepartment(employees[i]);
+        for (Map.Entry<Integer, Employee> entry : employees.entrySet()) {
+            if (department == entry.getValue().getDepartment()) {
+                printEmployeeWithoutDepartment(entry.getValue());
             }
         }
     }
 
-    public void printEmployeeWithoutDepartment(Employee employee) {
-        System.out.println(employee.getId() + " " +
-                employee.getName() + " " +
-                employee.getSurname() + " " +
-                employee.getPatronymic() + " " +
-                employee.getSalary()
-        );
-    }
 
     public void getAllEmployeeLessSalary(float salary) {
-        for (int i = 0; i < count; i++) {
-            if (employees[i].getSalary() < salary) {
-                printEmployeeWithoutDepartment(employees[i]);
+        for (Map.Entry<Integer, Employee> entry : employees.entrySet()) {
+            if (entry.getValue().getSalary() < salary) {
+                printEmployeeWithoutDepartment(entry.getValue());
             }
         }
     }
 
     public void getAllEmployeeMoreSalary(float salary) {
-        for (int i = 0; i < count; i++) {
-            if (employees[i].getSalary() > salary) {
-                printEmployeeWithoutDepartment(employees[i]);
+        for (Map.Entry<Integer, Employee> entry : employees.entrySet()) {
+            if (entry.getValue().getSalary() > salary) {
+                printEmployeeWithoutDepartment(entry.getValue());
             }
         }
     }
 
     private Employee getEmployee(String name, String surname, String patronymic) {
-        Employee employee = null;
-        for (int i = 0; i < count; i++) {
-            if (new Employee(name, surname, patronymic, 1, 0.0f).equals(employees[i])) {
-                employee = employees[i];
-                return employee;
-            }
+        Employee employee = new Employee(name, surname, patronymic, 1, 1);
+        employee = employees.get(employee.hashCode());
+        if (employee == null) {
+            throw new IllegalArgumentException("Такого сотрудника не существует");
         }
-        throw new IllegalArgumentException("Такого сотрудника не существует");
+        return employee;
     }
 
 
@@ -162,8 +149,8 @@ public class EmployeeBook {
 
     public int getCountDepartmentEmployee(int department) {
         int count = 0;
-        for (int i = 0; i < count; i++) {
-            if (employees[i].getDepartment() == department) {
+        for (Map.Entry<Integer, Employee> entry : employees.entrySet()) {
+            if (entry.getValue().getDepartment() == department) {
                 count++;
             }
         }
@@ -179,19 +166,11 @@ public class EmployeeBook {
     }
 
     public void printAllDepartmentAndFullName() {
-        for (int i = 0; i < count; i++) {
-            System.out.println( employees[i].getDepartment() + " " +
-                                employees[i].getName() + " " +
-                                employees[i].getSurname() + " " +
-                                employees[i].getPatronymic());
-        }
+        employees.forEach((integer, employee) -> System.out.println(employee.getDepartment() + " " + employee.getName() + " " + employee.getSurname() + " " + employee.getPatronymic()));
+
     }
 
-    private void checkEmployee(Employee employee) {
-        for (int i = 0; i < count; i++) {
-            if (employees[i].equals(employee)) {
-                throw new IllegalArgumentException("Такой Сотрудник уже есть в базе!");
-            }
-        }
+    private void printEmployeeWithoutDepartment(Employee value) {
+        System.out.println(value.getId() + " " + value.getName() + " " + value.getSurname() + " " + value.getPatronymic() + " " + value.getSalary());
     }
 }
